@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.transitions {
+    transition: all ease .3s;
+}
+
+.width-height {
+    height: same-as-width;
+  }
