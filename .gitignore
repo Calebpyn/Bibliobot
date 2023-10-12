@@ -1,0 +1,35 @@
+# Virtual Environment
+venv/
+
+# Byte-compiled files
+__pycache__/
+*.pyc
+
+# Logs and databases
+*.log
+*.db
+
+# Environment variables (if using dotenv or similar)
+.env
+
+# Local development settings (if using a settings file)
+instance/
+
+# IDE-specific files and directories (You can adjust this based on your IDE)
+.vscode/
+.idea/
+
+# Compiled Python files
+*.pyc
+
+# Environment configuration
+.env
+
+# macOS
+.DS_Store
+
+# Python and Flask specific files
+__pycache__/
+.pytest_cache/
+.env
+.env.test
