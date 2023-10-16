@@ -3,14 +3,15 @@ import Home from "./components/Home";
 import HelpWindow from "./components/HelpWindow";
 import SpeechRec from "./components/SpeechRec";
 import SpeechHome from "./components/SpeechHome";
+import SpeechHomeTest from "./components/SpeechHomeTest";
 
 function App() {
   return (
     <div className="App">
       <HashRouter>
         <Routes>
-          <Route path="/" element={<Home/>}/>
           <Route path="/home" element={<SpeechHome/>}/>
+          <Route path="/test" element={<SpeechHomeTest/>}/>
           <Route path="/help" element={<HelpWindow/>}/>
           <Route path="/speech" element={<SpeechRec/>}/>
         </Routes>
