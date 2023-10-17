@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AudioReactRecorder, { RecordState } from 'audio-react-recorder'
 import mascot from '../imgs/cetysMascot.png';
 import { BiSolidMicrophone } from 'react-icons/bi';
@@ -8,6 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 function SpeechHomeTest() {
 
     const [recogText, setRecogText] = useState('')
+
+    const [init, setInit] = useState(false)
 
     const [listening, setListening] = useState(false)
 
@@ -44,20 +46,47 @@ function SpeechHomeTest() {
     //     // URL.revokeObjectURL(blobURL);
     // };
       
-    const speechToText = async (fileName) => {
+    const fetchTest = async () => {
         try {
 
-            await fetch('http://127.0.0.1:5000/recognize', {
-                method: 'POST',
-                body: JSON.stringify(fileName),
-                headers: { 'Content-Type': 'application/json' },
-                mode: 'no-cors'
-            })
+            const fRes = await fetch('http://127.0.0.1:5000/')
+            const data = await fRes.json()
+
+            console.log(data)
+
 
         } catch(err) {
             console.log(err)
         }
     }
+
+    const sleep = (milliseconds) => {
+        return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+
+    const speechToText = async (fileName) => {
+        try {
+            
+            const fRes = await fetch('http://127.0.0.1:5000/recognize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(fileName), // Enviar el objeto JSON
+            });
+
+            const responseData = await fRes.json();
+            var text = responseData.result.replace(':', '').replace('}', '').slice(4);
+            text = text.slice(0, -1)
+            text = text.slice(0, -1)
+
+            console.log(text)
+
+            setRecogText(text)
+
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
 
 
     const onStop = async (audioData) => {
@@ -108,7 +137,16 @@ function SpeechHomeTest() {
             "path": `/Users/calebpayan/Downloads/${fileName}`
         }
 
+        // const data = {
+        //     "path": '/Users/calebpayan/Desktop/Developer/Bibliobot/back/Encinos.wav'
+        // }
+
+        await sleep(1500)
+        console.log('Hello')
+
         speechToText(data);
+
+        // fetchTest()
 
         
 
@@ -142,7 +180,9 @@ function SpeechHomeTest() {
         return newAudioBuffer;
     }
 
+    useEffect(() => {
 
+    }, [recogText])
 
     return (
         <div className='flex-col justify-between p-10 bg-yellow-400 h-screen w-full items-center'>
@@ -150,6 +190,7 @@ function SpeechHomeTest() {
             <div className='h-1/2 w-full flex justify-center items-center'>
                 <img src={mascot} className={listening ? 'h-0 hover:scale-110 hover:cursor-pointer transitions' : 'h-2/3 hover:scale-110 hover:cursor-pointer transitions'} onClick={() => {
                     handleListeningState()
+                    setInit(true)
                     if (!listening) {
                         startRecording()
                     }
@@ -162,7 +203,7 @@ function SpeechHomeTest() {
             </div>
 
             <div className='w-full h-2/6 flex justify-center items-center'>
-                <textarea className={listening ? 'w-3/4 transitions px-7 py-5 rounded-full' : 'w-0 transitions px-0 py-5 rounded-full'}></textarea>
+                <textarea value={recogText} className={init ? 'w-3/4 transitions px-7 py-5 rounded-full' : 'w-0 transitions px-0 py-5 rounded-full'}></textarea>
             </div>
 
             <div className='flex justify-start w-full h-1/6 items-center'>

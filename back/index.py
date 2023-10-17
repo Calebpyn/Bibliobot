@@ -4,13 +4,17 @@ from speech_recognition_service import SpeechRecognizer
 
 app = Flask(__name__)
 CORS(app, resources={r"/recognize": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/": {"origins": "http://localhost:3000"}})
 
 sr = SpeechRecognizer()
 
 
 @app.route('/', methods=['GET'])
 def hello():
-    return sr.recognize('/Users/calebpayan/Desktop/Developer/Bibliobot/back/Encinos.wav')
+    path = '/Users/calebpayan/Desktop/Developer/Bibliobot/back/Encinos.wav'
+    result = sr.recognize(path)
+    print(result)
+    return jsonify({'result': result})
  
 
 
