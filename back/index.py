@@ -1,12 +1,23 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from speech_recognition_service import SpeechRecognizer
+from text_interpretation_service import TextTree
+import unicodedata
+
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/recognize": {"origins": "http://localhost:3000"}})
 
 sr = SpeechRecognizer()
 
+
+def cleanText(texto):
+    # Elimina acentos
+    newText = ''.join(char for char in unicodedata.normalize('NFD', texto) if unicodedata.category(char) != 'Mn')
+
+    # Convierte a minúsculas
+    return newText.lower()[5:-3]
 
 @app.route('/', methods=['GET'])
 def hello():
@@ -17,8 +28,15 @@ def hello():
 @app.route('/recognize', methods=['POST'])
 def recognize():
     path = request.json.get('path')
-    result = sr.recognize(path)
-    print(result)
+    resultRecog = sr.recognize(path)
+
+
+    textInter = TextTree.searchQuery(resultRecog)
+
+    print(cleanText(resultRecog))
+
+    result = resultRecog
+
     return jsonify({'result': result})
 
 
@@ -31,5 +49,7 @@ def after_request(response):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
 
 

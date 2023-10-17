@@ -1,7 +1,8 @@
 class Node():
-    def __init__(self, word) -> None:
+    def __init__(self, word, query="") -> None:
         self.word = word
         self.neighbors = []
+        self.query = query
     
 class TextInpreter():
 
@@ -118,37 +119,66 @@ class TextInpreter():
         seccion.neighbors.append(seccion_espeficica)
 
         #donde-solicito level
-        prestamo = Node("prestamo")
+        prestamo = Node("prestamo", "En el módulo de información")
         solicito.neighbors.append(prestamo)
 
         #donde-comic level
-        titulo = Node("titulo")
+        titulo = Node("titulo", "Sección de comics")
         comic.neighbors.append(titulo)  
         
         #donde-libro level
-        titulo = Node("titulo")
+        titulo = Node("titulo", "En la sección de literatura")
         libro.neighbors.append(titulo)
 
         #donde-compro level
-        libro = Node("libro")
+        libro = Node("libro", "En el módulo de información")
         compro.neighbors.append(libro)
 
         #donde-prestan level
-        libro = Node("libro")
+        libro = Node("libro", "En el módulo de información")
         prestan.neighbors.append(libro)
 
         #donde-entrego 
-        libro = Node("libro")
+        libro = Node("libro", "En el módulo de información")
         entrego.neighbors.append(libro)
 
         #donde-pago level
-        multas = Node("multas")
+        multas = Node("multas", "En el módulo de información")
         pago.neighbors.append(multas)
 
         return root
 
+    def searchQuery(self, word):
+
+        wordArray = word.split()
+
+        wordSet = set({x for x in wordArray})
+
+        def wordSearch(root, words):
+
+            for x in root.neighbors:
+                if x.word in words:
+                    if x.query != "":
+                        result = x.query
+                        return result
+                    return wordSearch(x, words)
+
+            return None
+
+        print(wordSearch(self.root, wordSet))
+
+
+
+        
+        
+                
+            
+
+
+
+TextTree = TextInpreter()
+# cosa.print_binary_tree()
+
+# cosa.searchQuery('en donde está el comic con el titulo invencible')
     
 
-cosa = TextInpreter()
-cosa.print_binary_tree()
-    
